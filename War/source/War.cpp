@@ -7,7 +7,6 @@
 class Card
 {
 public:
-
     // enums
     struct Suit
     {
@@ -23,8 +22,8 @@ public:
 
         struct Description
         {
-            const char *Name;
-            const char *NamePlural;
+            const char* Name;
+            const char* NamePlural;
         };
     };
 
@@ -51,8 +50,8 @@ public:
 
         struct Description
         {
-            const char *Name;
-            const char *NamePlural;
+            const char* Name;
+            const char* NamePlural;
         };
     };
 
@@ -82,14 +81,14 @@ private:
 
 // construct:
 Card::Card()
-: m_suit(Card::Suit::Spade)
-, m_rank(Card::Rank::Ace)
+    : m_suit(Card::Suit::Spade)
+    , m_rank(Card::Rank::Ace)
 {
 }
 
 Card::Card(const Card::Suit::enum_type suit, const Card::Rank::enum_type rank)
-: m_suit(suit)
-, m_rank(rank)
+    : m_suit(suit)
+    , m_rank(rank)
 {
 }
 
@@ -211,8 +210,8 @@ private:
 
 // constuct:
 Deck::Deck()
-: m_cards()
-, m_top_card_idx(0)
+    : m_cards()
+    , m_top_card_idx(0)
 {
     for (unsigned int rank = 0; rank != Card::Rank::static_size; rank++)
     {
@@ -230,12 +229,12 @@ Deck::Deck()
 
 struct RandomInteger
 {
-    unsigned int operator() (const unsigned int max) { return std::rand() % max; }
-} random_integer;
+    unsigned int operator() (const unsigned int max) const {return std::rand() % max;}
+};
 
 void Deck::Shuffle()
 {
-    std::random_shuffle(m_cards, m_cards + Deck::NumCards, random_integer);
+    std::random_shuffle(m_cards, m_cards + Deck::NumCards, RandomInteger());
 }
 
 bool Deck::Empty() const
@@ -279,9 +278,9 @@ protected:
 
 // construct:
 Player::Player()
-: m_score(0)
-, m_removed_card(0)
-, m_cards()
+    : m_score(0)
+    , m_removed_card(0)
+    , m_cards()
 {
 }
 
@@ -309,7 +308,7 @@ void Player::ReplaceCard(Deck& deck)
 
 /*virtual*/ Card Player::Draw()
 {
-    m_removed_card = random_integer(3);
+    m_removed_card = RandomInteger()(3);
     return m_cards[m_removed_card];
 }
 
@@ -395,9 +394,9 @@ private:
 // construct:
 WarGame::WarGame()
 : m_done(false)
-, m_player1()
-, m_player2()
-, m_deck()
+    , m_player1()
+    , m_player2()
+    , m_deck()
 {
     m_deck.Shuffle();
     SelectPlayers();
