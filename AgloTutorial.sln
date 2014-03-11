@@ -5,6 +5,13 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "War", "War\build\War.vcxproj", "{59D6618E-D494-4E2E-9694-9E1E2BC5A6FC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleTable", "SimpleTable\build\SimpleTable.vcxproj", "{F5F09817-2949-40F0-BD4A-55E14E34A85B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Problem1p1", "Problem1p1\build\Problem1p1.vcxproj", "{18585CC9-05A2-40B1-9798-F395FAD0BD3C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5F09817-2949-40F0-BD4A-55E14E34A85B} = {F5F09817-2949-40F0-BD4A-55E14E34A85B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +22,14 @@ Global
 		{59D6618E-D494-4E2E-9694-9E1E2BC5A6FC}.Debug|Win32.Build.0 = Debug|Win32
 		{59D6618E-D494-4E2E-9694-9E1E2BC5A6FC}.Release|Win32.ActiveCfg = Release|Win32
 		{59D6618E-D494-4E2E-9694-9E1E2BC5A6FC}.Release|Win32.Build.0 = Release|Win32
+		{F5F09817-2949-40F0-BD4A-55E14E34A85B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F5F09817-2949-40F0-BD4A-55E14E34A85B}.Debug|Win32.Build.0 = Debug|Win32
+		{F5F09817-2949-40F0-BD4A-55E14E34A85B}.Release|Win32.ActiveCfg = Release|Win32
+		{F5F09817-2949-40F0-BD4A-55E14E34A85B}.Release|Win32.Build.0 = Release|Win32
+		{18585CC9-05A2-40B1-9798-F395FAD0BD3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{18585CC9-05A2-40B1-9798-F395FAD0BD3C}.Debug|Win32.Build.0 = Debug|Win32
+		{18585CC9-05A2-40B1-9798-F395FAD0BD3C}.Release|Win32.ActiveCfg = Release|Win32
+		{18585CC9-05A2-40B1-9798-F395FAD0BD3C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
