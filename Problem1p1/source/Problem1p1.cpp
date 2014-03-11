@@ -11,14 +11,14 @@ static const double nmsec_year    = 365*nmsec_day;
 static const double nmsec_century = 100*nmsec_year;
 
 // f(n)^-1 
-double fm1_logn (const double t) {return std::exp(t);          }
-double fm1_sqrtn(const double t) {return t*t;                  }
-double fm1_n    (const double t) {return t;                    }
-double fm1_nlogn(const double t) {return -1;/*transendental?*/ }
-double fm1_n2   (const double t) {return std::sqrt(t);         }
-double fm1_n3   (const double t) {return std::pow(t,(1.0/3.0));}
-double fm1_2n   (const double t) {return 2*std::log(t);        }
-double fm1_nfac (const double t) {return -1;/*transendental?*/ }
+double fm1_logn (const double t) {return std::exp(t);         }
+double fm1_sqrtn(const double t) {return t*t;                 }
+double fm1_n    (const double t) {return t;                   }
+double fm1_nlogn(const double t) {return -1;/*transendental?*/}
+double fm1_n2   (const double t) {return std::pow(t, 0.500);   }
+double fm1_n3   (const double t) {return std::pow(t, 0.333);   }
+double fm1_2n   (const double t) {return 2*std::log(t);       }
+double fm1_nfac (const double t) {return -1;/*transendental?*/}
 
 int main()
 {

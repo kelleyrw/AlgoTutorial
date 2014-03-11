@@ -16,6 +16,9 @@
   <ItemGroup>
     <ClInclude Include="..\source\SimpleTable.impl.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\SimpleTable.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F5F09817-2949-40F0-BD4A-55E14E34A85B}</ProjectGuid>
     <RootNamespace>SimpleTable</RootNamespace>
