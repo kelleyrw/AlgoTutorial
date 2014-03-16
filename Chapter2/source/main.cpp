@@ -9,14 +9,13 @@ template <typename T, unsigned int N>
 std::string ArrayString(const T(&array)[N])
 {
     std::stringstream os;
-    if (N == 0) { os << "{}"; }
+    os << "{";
     for (std::size_t i = 0; i != N; i++)
     {
-        if (i == 0) { os << "{"; }
         os << array[i];
         if (i != (N - 1)) { os << ", "; }
-        if (i == (N - 1)) { os << "}"; }
     }
+    os << "}";
     return os.str();
 }
 
@@ -29,16 +28,15 @@ std::string ArrayString(const T(&array)[N])
 namespace ch2
 {
     // sort in place
-    void sort(int v[], const std::size_t N)
+    void sort(int* const v, const std::size_t N)
     {
         for (std::size_t j = 1; j != N; j++)
         {
             const int key = v[j];
             int i = j - 1;
-            while (i > -1 && v[i] > key)
+            for ( ; i > -1 && v[i] > key; i--)
             {
                 v[i + 1] = v[i];
-                i = i - 1;
             }
             v[i + 1] = key;
         }
