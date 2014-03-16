@@ -1,5 +1,3 @@
-#include <iostream>
-
 // ------------------------------------------------------------ //
 // helper functions
 // ------------------------------------------------------------ //
@@ -26,15 +24,10 @@ std::string ArrayString(const T(&array)[N])
 // Section 2.1 -- Insertion Sort
 // ------------------------------------------------------------ //
 
-namespace rwk
+#include <iostream>
+
+namespace ch2
 {
-    //template <typename RandomAccessIterator>
-    //void sort(RandomAccessIterator first, RandomAccessIterator end)
-    //{
-    //    std::size_t N = std::distance(first, last);
-
-    //}
-
     // sort in place
     void sort(int v[], const std::size_t N)
     {
@@ -51,18 +44,18 @@ namespace rwk
         }
         return;
     }
+    
+    void TestInsertionSort()
+    {
+        int v[] = { 5, 2, 4, 6, 1, 3 };
+        const std::size_t N = sizeof(v) / sizeof(v[0]);
+        std::cout << "before sorted = " << ArrayString(v) << std::endl;
+        ch2::sort(v, N);
+        std::cout << "after sorted  = " << ArrayString(v) << std::endl;
+    }
 
-} // namespace rwk
+} // namespace ch2
 
-
-void TestInsertionSort()
-{
-    int v[] = { 5, 2, 4, 6, 1, 3 };
-    const std::size_t N = sizeof(v) / sizeof(v[0]);
-    std::cout << "before sorted = " << ArrayString(v) << std::endl;
-    rwk::sort(v, N);
-    std::cout << "after sorted  = " << ArrayString(v) << std::endl;
-}
 
 // ------------------------------------------------------------ //
 // main
@@ -71,8 +64,6 @@ void TestInsertionSort()
 int main()
 {
     // section 2.1 -- insertion sort
-    TestInsertionSort();
-
-
+    ch2::TestInsertionSort();
     return 0;
 }
