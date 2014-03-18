@@ -4,17 +4,17 @@
 
 #include <string>
 #include <sstream>
+#include <cassert>
 
 template <typename T>
 std::string ArrayString(const T* const array, const unsigned int N)
 {
-    if (array == NULL && N > 0)
-    {
-        std::invalid_argument("[ch2::ArrayString] array is NULL!");
-    }
+    // test boundary conditions
+    assert(!(array == NULL && N > 0));
+
     std::stringstream os;
     os << "{";
-    for (std::size_t i = 0; i != N; i++)
+    for (std::size_t i = 0; i != N; ++i)
     {
         os << array[i];
         if (i != (N - 1)) { os << ", "; }
@@ -35,7 +35,6 @@ std::string ArrayString(const T(&array)[N])
 
 #include <iostream>
 #include <functional>
-#include <cassert>
 
 namespace ch2
 {
@@ -49,18 +48,15 @@ namespace ch2
             return;
         }
 
-        // check for NULL pointer
-        if (v == NULL && N > 0)
-        {
-            std::invalid_argument("[ch2::sort] array is NULL!");
-        }
+        // test boundary conditions
+        assert(!(v == NULL && N > 0));
 
         // do the sort
-        for (std::size_t j = 1; j != N; j++)
+        for (std::size_t j = 1; j != N; ++j)
         {
             const int key = v[j];
             int i = j - 1;
-            for ( ; i > -1 && compare(key, v[i]); i--)
+            for ( ; i > -1 && compare(key, v[i]); --i)
             {
                 v[i + 1] = v[i];
             }
@@ -70,7 +66,7 @@ namespace ch2
     }
 
     template <typename Compare = std::less<int> >
-    bool is_sorted(int* v, const std::size_t N, Compare compare = Compare())
+    bool is_sorted(const int* const v, const std::size_t N, Compare compare = Compare())
     {
         // check for 0 or 1 elements -- trivially sorted
         if (N <= 1)
@@ -78,16 +74,13 @@ namespace ch2
             return true;
         }
 
-        // check for NULL pointer
-        if (v == NULL && N > 0)
-        {
-            std::invalid_argument("[ch2::is_sorted] array is NULL!");
-        }
+        // test boundary conditions
+        assert(!(v == NULL && N > 0));
 
-        // test if element j > element
-        for (std::size_t i = 1; i != N; i++)
+        // test if element j > element i
+        for (std::size_t i = 0, j = 1; j < N; ++i, ++j)
         {
-            if (!compare(v[i - 1], v[i]))
+            if (compare(v[j], v[i]))
             {
                 return false;
             }
@@ -106,6 +99,22 @@ namespace ch2
         ch2::sort(v0, N0);
         assert(ch2::is_sorted(v0, N0));
         std::cout << "after sorted = " << ArrayString(v0, N0) << "\n" << std::endl;
+
+        // test array of size 1
+        std::cout << "testing one size array:\n";
+        int v1[] = { 7 };
+        const std::size_t N1 = sizeof(v1) / sizeof(v1[0]);
+        std::cout << "before sorted = " << ArrayString(v1, N1) << "\n";
+        ch2::sort(v1, N1);
+        assert(ch2::is_sorted(v1, N1));
+        std::cout << "after sorted = " << ArrayString(v1, N1) << "\n" << std::endl;
+
+        // test unsorted array
+        std::cout << "testing unsorted array:\n";
+        int const v2[] = { 4, 8, 3, 9 };
+        const std::size_t N2 = sizeof(v2) / sizeof(v2[0]);
+        std::cout << "v2 = " << ArrayString(v2, N2) << "\n" << std::endl;
+        assert(!is_sorted(v2, N2));
 
 
         std::cout << "test example (page 20):\n";
