@@ -7,7 +7,7 @@
 #include <cassert>
 
 template <typename T>
-std::string ArrayString(T const * const array, int const N)
+std::string ArrayString(T const * const array, const int N)
 {
     // test boundary conditions
     assert(!(array == NULL && N > 0));
@@ -35,11 +35,12 @@ std::string ArrayString(T const(&array)[N])
 
 #include <iostream>
 #include <functional>
+#include <list>
 
 namespace ch2
 {
     // sort in place
-    template <typename Compare = std::less<int> >
+    template <typename Compare = std::less<int>>
     void sort(int* const v, int const N, Compare compare = Compare())
     {
         // check for 0 or 1 elements
@@ -62,10 +63,30 @@ namespace ch2
         return;
     }
 
-    template <int N, typename Compare = std::less<int> >
+    template <int N, typename Compare = std::less<int>>
     void sort(int (&array)[N], Compare compare = Compare())
     {
         sort(array, N, compare);
+    }
+
+    // sort in place using iterators
+    template <typename BidirectionalIterator, typename Compare = std::less<int>>
+    void sort_range(BidirectionalIterator first, BidirectionalIterator last, Compare compare = Compare())
+    {
+        BidirectionalIterator j = first;
+        for (++j; j != last; ++j)
+        {
+            int const key = *j;
+            BidirectionalIterator current = j;
+            BidirectionalIterator adjacent = current;
+            for (--current; adjacent != first && compare(key, *current); --adjacent)
+            {
+                *adjacent = *current;
+                if (current != first) --current;
+            }
+            *adjacent = key;
+        }
+        return;
     }
 
     template <typename Compare = std::less<int> >
@@ -88,7 +109,7 @@ namespace ch2
         return true;
     }
 
-    template <int N, typename Compare = std::less<int> >
+    template <int N, typename Compare = std::less<int>>
     bool is_sorted(const int (&array)[N], Compare compare = Compare())
     {
         return is_sorted(array, N, compare);
@@ -127,6 +148,26 @@ namespace ch2
         sort(v);
         assert(is_sorted(v));
         std::cout << "after sorted = " << ArrayString(v) << "\n" << std::endl;
+
+        // test example from page 20 using iterators
+        std::cout << "test example (page 20) using templates:\n";
+        int v3[] = { 5, 2, 4, 6, 1, 3 };
+        const int N3 = sizeof(v3)/sizeof(v3[0]);
+        std::cout << "before sorted = " << ArrayString(v3) << "\n";
+        sort_range(v3, v3+N3);
+        assert(is_sorted(v3));
+        std::cout << "after sorted = " << ArrayString(v3) << "\n" << std::endl;
+
+        // now try it with an std::list
+        std::cout << "test example (page 20) using tempates and std::list:\n";
+        int v4[] = { 5, 2, 4, 6, 1, 3 };
+        const int N4 = sizeof(v4) / sizeof(v4[0]);
+        std::list<int> l1(v4, v4+N4);
+        std::cout << "before sorted = " << ArrayString(v4) << "\n";
+        sort_range(l1.begin(), l1.end());
+        std::copy(l1.begin(), l1.end(), v4);
+        assert(is_sorted(v4));
+        std::cout << "after sorted = " << ArrayString(v4) << "\n" << std::endl;
     }
 
     // problem 2.1-1
