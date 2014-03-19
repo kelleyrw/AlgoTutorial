@@ -33,6 +33,8 @@ namespace rwk
 
 // implementation
 
+#include <cassert>
+
 namespace rwk
 {
     // construct:
