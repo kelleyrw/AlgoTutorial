@@ -12,7 +12,7 @@ namespace rwk
 
         // construct:
         stack();
-        
+
         // methods:
         bool empty() const;
         int size() const;
@@ -26,7 +26,6 @@ namespace rwk
         // members:
         static const unsigned int s_ArraySize = 1024;
         T m_Array[s_ArraySize];
-        T* m_TopPtr;
         int m_Size;
     };
 
@@ -40,7 +39,6 @@ namespace rwk
     template <typename T>
     stack<T>::stack()
         : m_Array()
-        , m_TopPtr(NULL)
         , m_Size(0)
     {}
 
@@ -60,32 +58,16 @@ namespace rwk
     template <typename T>
     void stack<T>::push(T const &value)
     {
-        if (!empty())
-        {
-            assert(m_Size + 1 < s_ArraySize);
-            *(m_TopPtr++) = value;
-        }
-        else
-        {
-            m_TopPtr = &m_Array[0];
-            *m_TopPtr = value;
-        }
+        assert(m_Size + 1 < s_ArraySize);
+        m_Array[m_Size] = value;
         m_Size++;
     }
 
     template <typename T>
     void stack<T>::push(T &&value)
     {
-        if (!empty())
-        {
-            assert(m_Size + 1 < s_ArraySize);
-            *(m_TopPtr++) = std::move(value);
-        }
-        else
-        {
-            m_TopPtr = &m_Array[0];
-            *m_TopPtr = std::move(value);
-        }
+        assert(m_Size + 1 < s_ArraySize);
+        m_Array[m_Size] = std::move(value);
         m_Size++;
     }
 
@@ -93,19 +75,19 @@ namespace rwk
     void stack<T>::pop()
     {
         assert(!empty());
-        m_TopPtr--;
+        m_Size--;
     }
 
     template <typename T>
     T& stack<T>::top()
     {
-        return *m_TopPtr;
+        return m_Array[m_Size-1];
     }
 
     template <typename T>
     T const& stack<T>::top() const
     {
-        return *m_TopPtr;
+        return m_Array[m_Size - 1];
     }
 }
 
