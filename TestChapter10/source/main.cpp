@@ -3,6 +3,7 @@
 
 int main()
 {
-    std::cout << test_lib() << std::endl;
+    //std::cout << test_lib() << std::endl;
     return 0;
 }
+1
