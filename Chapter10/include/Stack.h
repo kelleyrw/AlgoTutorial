@@ -59,16 +59,14 @@ namespace rwk
     void stack<T>::push(T const &value)
     {
         assert(m_Size + 1 < s_ArraySize);
-        m_Array[m_Size] = value;
-        m_Size++;
+        m_Array[m_Size++] = value;
     }
 
     template <typename T>
     void stack<T>::push(T &&value)
     {
         assert(m_Size + 1 < s_ArraySize);
-        m_Array[m_Size] = std::move(value);
-        m_Size++;
+        m_Array[m_Size++] = std::move(value);
     }
 
     template <typename T>
