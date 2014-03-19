@@ -24,14 +24,14 @@ namespace rwk
 
     private:
         // members:
-        static const unsigned int s_ArraySize = 1024;
+        static const int s_ArraySize = 1024;
         T m_Array[s_ArraySize];
         int m_Size;
     };
 
 } // namespace rwk
 
-// implementation
+#pragma region Implementation
 
 #include <cassert>
 
@@ -79,16 +79,18 @@ namespace rwk
     }
 
     template <typename T>
-    T& stack<T>::top()
+    typename stack<T>::value_type& stack<T>::top()
     {
-        return m_Array[m_Size-1];
+        return m_Array[m_Size - 1];
     }
 
     template <typename T>
-    T const& stack<T>::top() const
+    typename stack<T>::value_type const& stack<T>::top() const
     {
         return m_Array[m_Size - 1];
     }
 }
+
+#pragma endregion
 
 #endif // #define RWK_STACK_H
