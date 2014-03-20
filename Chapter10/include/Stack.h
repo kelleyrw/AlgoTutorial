@@ -67,10 +67,12 @@ namespace rwk
 
     template <typename T>
     stack<T>::stack(stack &&rhs)
-        : m_Head(nullptr)
-        , m_Size(0)
+        : m_Head(rhs.m_Head)
+        , m_Size(rhs.m_Size)
     {
-        *this = std::move(rhs);
+        // reset rhs to blank values
+        rhs.m_Head = nullptr;
+        rhs.m_Size = 0;
     }
 
     template <typename T>
@@ -91,19 +93,16 @@ namespace rwk
     template <typename T>
     typename stack<T>& stack<T>::operator = (stack &&rhs)
     {
-        if (this != &rhs)
-        {
-            // free existing data
-            if (!empty()) delete this;
+        stack temp(std::move(*this));
 
-            // copy object's data
-            m_Head = rhs.m_Head;
-            m_Size = rhs.m_Size;
+        // copy object's data
+        m_Head = rhs.m_Head;
+        m_Size = rhs.m_Size;
 
-            // reset rhs to blank values
-            rhs.m_Head = nullptr;
-            rhs.m_Size = 0;
-        }
+        // reset rhs to blank values
+        rhs.m_Head = nullptr;
+        rhs.m_Size = 0;
+        
         return *this;
     }
 
