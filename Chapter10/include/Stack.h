@@ -12,6 +12,12 @@ namespace rwk
 
         // construct:
         stack();
+        stack(stack &&rhs);
+        stack(stack const &rhs);
+
+        // assign:
+        stack& operator = (stack &&rhs);
+        stack& operator = (stack const &rhs);
 
         // destroy:
         ~stack();
@@ -26,13 +32,13 @@ namespace rwk
         value_type const& top() const;
 
     private:
-        // members:
+        // methods:
         struct Node;
+        void push(Node * const node);
+
+        // members:
         Node *m_Head;
         int m_Size;
-
-        // private methods:
-        void push(Node * const node);
     };
 
 } // namespace rwk
@@ -40,15 +46,74 @@ namespace rwk
 #pragma region Implementation
 
 #include <cassert>
+#include <algorithm>
 
 namespace rwk
 {
+    // members:
+    template <typename T>
+    struct stack<T>::Node
+    {
+        T value;
+        Node *next;
+    };
+
     // construct:
     template <typename T>
     stack<T>::stack()
         : m_Head(nullptr)
         , m_Size(0)
     {}
+
+    template <typename T>
+    stack<T>::stack(stack &&rhs)
+        : m_Head(nullptr)
+        , m_Size(0)
+    {
+        *this = std::move(rhs);
+    }
+
+    template <typename T>
+    stack<T>::stack(stack const &rhs)
+        : m_Head(nullptr)
+        , m_Size(0)
+    {
+        if (rhs.empty()) return;
+        Node * node = rhs.m_Head;
+        while (node != nullptr)
+        {
+            push(node->value);
+            node = node->next;
+        }
+    }
+
+    // assign:
+    template <typename T>
+    typename stack<T>& stack<T>::operator = (stack &&rhs)
+    {
+        if (this != &rhs)
+        {
+            // free existing data
+            if (!empty()) delete this;
+
+            // copy object's data
+            m_Head = rhs.m_Head;
+            m_Size = rhs.m_Size;
+
+            // reset rhs to blank values
+            rhs.m_Head = nullptr;
+            rhs.m_Size = 0;
+        }
+        return *this;
+    }
+
+    template <typename T>
+    typename stack<T>& stack<T>::operator = (stack const &rhs)
+    {
+        stack tmp(rhs);
+        std::swap(*this, tmp);
+        return *this;
+    }
 
     // destroy:
     template <typename T>
@@ -79,6 +144,7 @@ namespace rwk
         if (empty())
         {
             m_Head = node;
+            node->next = nullptr;
         }
         else
         {
@@ -134,14 +200,7 @@ namespace rwk
         return m_Head->value;
     }
 
-    // members:
-    template <typename T>
-    struct stack<T>::Node
-    {
-        T value;
-        Node *next;
-    };
-}
+} // namespace rwk
 
 #pragma endregion
 
