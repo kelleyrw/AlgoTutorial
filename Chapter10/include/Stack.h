@@ -27,13 +27,12 @@ namespace rwk
 
     private:
         // members:
-        struct Node
-        {
-            T value;
-            Node *next;
-        }; 
+        struct Node;
         Node *m_Head;
         int m_Size;
+
+        // private methods:
+        void push(Node * const node);
     };
 
 } // namespace rwk
@@ -75,20 +74,26 @@ namespace rwk
     }
 
     template <typename T>
+    void stack<T>::push(Node * const node)
+    {
+        if (empty())
+        {
+            m_Head = node;
+        }
+        else
+        {
+            node->next = m_Head;
+            m_Head = node;
+        }
+        ++m_Size;
+    }
+
+    template <typename T>
     void stack<T>::push(T const &value)
     {
         Node * const new_node = new Node;
         new_node->value = value;
-        if (empty())
-        {
-            m_Head = new_node;
-        }
-        else
-        {
-            new_node->next = m_Head;
-            m_Head = new_node;
-        }
-        ++m_Size;
+        push(new_node);
     }
 
     template <typename T>
@@ -96,16 +101,7 @@ namespace rwk
     {
         Node * const new_node = new Node;
         new_node->value = std::move(value);
-        if (empty())
-        {
-            m_Head = new_node;
-        }
-        else
-        {
-            new_node->next = m_Head;
-            m_Head = new_node;
-        }
-        ++m_Size;
+        push(new_node);
     }
 
     template <typename T>
@@ -137,6 +133,14 @@ namespace rwk
     {
         return m_Head->value;
     }
+
+    // members:
+    template <typename T>
+    struct stack<T>::Node
+    {
+        T value;
+        Node *next;
+    };
 }
 
 #pragma endregion
