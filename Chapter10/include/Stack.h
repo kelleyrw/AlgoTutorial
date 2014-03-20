@@ -93,6 +93,7 @@ namespace rwk
     template <typename T>
     typename stack<T>& stack<T>::operator = (stack &&rhs)
     {
+        assert(this != &rhs);
         stack temp(std::move(*this));
 
         // copy object's data
