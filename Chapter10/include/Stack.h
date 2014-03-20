@@ -77,7 +77,7 @@ namespace rwk
     template <typename T>
     void stack<T>::push(T const &value)
     {
-        Node *new_node = new Node;
+        Node * const new_node = new Node;
         new_node->value = value;
         if (empty())
         {
