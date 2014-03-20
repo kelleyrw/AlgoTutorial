@@ -13,6 +13,9 @@ namespace rwk
         // construct:
         stack();
 
+        // destroy:
+        ~stack();
+
         // methods:
         bool empty() const;
         int size() const;
@@ -24,8 +27,12 @@ namespace rwk
 
     private:
         // members:
-        static const int s_ArraySize = 1024;
-        T m_Array[s_ArraySize];
+        struct Node
+        {
+            T value;
+            Node *next;
+        }; 
+        Node *m_Head;
         int m_Size;
     };
 
@@ -40,9 +47,19 @@ namespace rwk
     // construct:
     template <typename T>
     stack<T>::stack()
-        : m_Array()
+        : m_Head(nullptr)
         , m_Size(0)
     {}
+
+    // destroy:
+    template <typename T>
+    stack<T>::~stack()
+    {
+        while (!empty())
+        {
+            pop();
+        }
+    }
 
     // methods:
     template <typename T>
@@ -60,34 +77,65 @@ namespace rwk
     template <typename T>
     void stack<T>::push(T const &value)
     {
-        assert(m_Size + 1 < s_ArraySize);
-        m_Array[m_Size++] = value;
+        Node *new_node = new Node;
+        new_node->value = value;
+        if (empty())
+        {
+            m_Head = new_node;
+        }
+        else
+        {
+            new_node->next = m_Head;
+            m_Head = new_node;
+        }
+        ++m_Size;
     }
 
     template <typename T>
     void stack<T>::push(T &&value)
     {
-        assert(m_Size + 1 < s_ArraySize);
-        m_Array[m_Size++] = std::move(value);
+        Node * const new_node = new Node;
+        new_node->value = std::move(value);
+        if (empty())
+        {
+            m_Head = new_node;
+        }
+        else
+        {
+            new_node->next = m_Head;
+            m_Head = new_node;
+        }
+        ++m_Size;
     }
 
     template <typename T>
     void stack<T>::pop()
     {
         assert(!empty());
-        m_Size--;
+        if (m_Size == 1)
+        {
+            delete m_Head;
+            m_Head = nullptr;
+        }
+        else
+        {
+            Node * const old_head = m_Head;
+            m_Head = m_Head->next;
+            delete old_head;
+        }
+        --m_Size;
     }
 
     template <typename T>
     typename stack<T>::value_type& stack<T>::top()
     {
-        return m_Array[m_Size - 1];
+        return m_Head->value;
     }
 
     template <typename T>
     typename stack<T>::value_type const& stack<T>::top() const
     {
-        return m_Array[m_Size - 1];
+        return m_Head->value;
     }
 }
 

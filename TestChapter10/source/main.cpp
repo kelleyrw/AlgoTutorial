@@ -24,6 +24,7 @@ int main()
     s.push(10);
     s.push(20);
     s.push(30);
+    std::cout << "size of s = " << s.size() << "\n";
     std::cout << "s: " << PopString(s) << '\n';
     return 0;
 }
