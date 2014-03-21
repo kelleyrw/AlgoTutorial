@@ -13,5 +13,4 @@
 *.sdf
 *.pyc
 external_tools/gyp*/*
-external_tools/libs*/*
 build/*
