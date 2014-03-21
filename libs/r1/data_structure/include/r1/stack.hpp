@@ -81,16 +81,21 @@ namespace r1
         , m_Size(0)
     {
         if (rhs.empty()) return;
-        Node * node = rhs.m_Head;
-        Node ** node_array = new Node*[rhs.m_Size];
-        for (int i = rhs.m_Size-1; i >= 0; --i)
+        
+        // initial node
+        Node * tail = new Node{ rhs.m_Head->value, nullptr };
+        m_Head = tail;
+        ++m_Size;
+        
+        // subsequent nodes
+        Node * node = rhs.m_Head->next;
+        while (node != nullptr)
         {
-            node_array[i] = node;
+            Node * new_node = new Node{ node->value, nullptr };
+            tail->next = new_node;
+            tail = new_node;
+            ++m_Size;
             node = node->next;
-        }
-        for (int i = 0; i < rhs.m_Size; ++i)
-        {
-            push(node_array[i]->value);
         }
     }
 
