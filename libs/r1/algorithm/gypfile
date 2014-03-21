@@ -1,0 +1,38 @@
+{
+    'targets':
+    [
+        {
+            'target_name': 'r1.algorithm',
+            'type': 'static_library',
+            'include_dirs':
+            [
+                'include',
+            ],
+            'direct_dependent_settings':
+            {
+                'include_dirs':
+                [
+                    'include',
+                ],
+            },
+            'sources':
+            [
+                'include/r1/insert_sort.hpp',
+                'source/r1/insert_sort.cpp',
+            ],
+        },
+        {
+            'target_name': 'r1.algorithm.test',
+            'type': 'executable',
+            'dependencies':
+            [
+                'r1.algorithm',
+            ],
+            'sources':
+            [
+                'test/test_main.cpp',
+                'test/r1/test_insert_sort.cpp',
+            ],
+        },
+    ],
+}

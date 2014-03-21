@@ -1,0 +1,38 @@
+{
+    'targets':
+    [
+        {
+            'target_name': 'm1.vector',
+            'type': 'static_library',
+            'include_dirs':
+            [
+                'include',
+            ],
+            'direct_dependent_settings':
+            {
+                'include_dirs':
+                [
+                    'include',
+                ],
+            },
+            'sources':
+            [
+                'include/m1/vector.hpp',
+                'source/m1/vector.cpp',
+            ],
+        },
+        {
+            'target_name': 'm1.vector.test',
+            'type': 'executable',
+            'dependencies':
+            [
+                'm1.vector',
+            ],
+            'sources':
+            [
+                'test/test_main.cpp',
+                'test/m1/test_vector.cpp',
+            ],
+        },
+    ],
+}

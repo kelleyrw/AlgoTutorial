@@ -1,0 +1,38 @@
+{
+    'targets':
+    [
+        {
+            'target_name': 'r1.data_structure',
+            'type': 'static_library',
+            'include_dirs':
+            [
+                'include',
+            ],
+            'direct_dependent_settings':
+            {
+                'include_dirs':
+                [
+                    'include',
+                ],
+            },
+            'sources':
+            [
+                'include/r1/stack.hpp',
+                'source/r1/stack.cpp',
+            ],
+        },
+        {
+            'target_name': 'r1.data_structure.test',
+            'type': 'executable',
+            'dependencies':
+            [
+                'r1.data_structure',
+            ],
+            'sources':
+            [
+                'test/test_main.cpp',
+                'test/r1/test_stack.cpp',
+            ],
+        },
+    ],
+}
