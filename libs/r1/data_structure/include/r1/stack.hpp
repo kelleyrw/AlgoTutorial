@@ -82,10 +82,15 @@ namespace r1
     {
         if (rhs.empty()) return;
         Node * node = rhs.m_Head;
-        while (node != nullptr)
+        Node ** node_array = new Node*[rhs.m_Size];
+        for (int i = rhs.m_Size-1; i >= 0; --i)
         {
-            push(node->value);
+            node_array[i] = node;
             node = node->next;
+        }
+        for (int i = 0; i < rhs.m_Size; ++i)
+        {
+            push(node_array[i]->value);
         }
     }
 
