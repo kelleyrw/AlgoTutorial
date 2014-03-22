@@ -1,5 +1,5 @@
-#ifndef R1_STACK_H
-#define R1_STACK_H
+#ifndef R1_STACK_HPP
+#define R1_STACK_HPP
 
 namespace r1
 {
@@ -212,4 +212,4 @@ namespace r1
 
 #pragma endregion
 
-#endif // #define R1_STACK_H
+#endif // #define R1_STACK_HPP
