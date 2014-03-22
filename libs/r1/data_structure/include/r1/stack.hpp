@@ -167,16 +167,14 @@ namespace r1
     template <typename T>
     void stack<T>::push(T const &value)
     {
-        Node * const new_node = new Node;
-        new_node->value = value;
+        Node * const new_node = new Node{ value, nullptr };
         push(new_node);
     }
 
     template <typename T>
     void stack<T>::push(T &&value)
     {
-        Node * const new_node = new Node;
-        new_node->value = std::move(value);
+        Node * const new_node = new Node{ std::move(value), nullptr };
         push(new_node);
     }
 
