@@ -129,10 +129,7 @@ namespace r1
     template <typename T>
     stack<T>::~stack()
     {
-        while (!empty())
-        {
-            pop();
-        }
+        while (!empty()) pop();
     }
 
     // methods:
