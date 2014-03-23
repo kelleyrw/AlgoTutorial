@@ -19,6 +19,8 @@
             [
                 'include/r1/stack.hpp',
                 'source/r1/stack.cpp',
+                'include/r1/queue.hpp',
+                'source/r1/queue.cpp',
             ],
         },
         {
@@ -32,6 +34,7 @@
             [
                 'test/test_main.cpp',
                 'test/r1/test_stack.cpp',
+                'test/r1/test_queue.cpp',
             ],
         },
     ],

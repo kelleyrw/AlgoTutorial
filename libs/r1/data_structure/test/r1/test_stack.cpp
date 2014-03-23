@@ -1,18 +1,21 @@
 #include "r1/stack.hpp"
 #include <cassert>
 
-class NoDefaultNoCopyAssign
+namespace r1_test_stack
 {
-public:
-    int m_Int;
-    NoDefaultNoCopyAssign(const int value) : m_Int(value) {}
-    NoDefaultNoCopyAssign() = delete;
-    NoDefaultNoCopyAssign(NoDefaultNoCopyAssign && rhs) : m_Int(std::move(rhs.m_Int)) {}
-    NoDefaultNoCopyAssign(NoDefaultNoCopyAssign const & rhs) : m_Int(rhs.m_Int) {}
-    NoDefaultNoCopyAssign& operator = (NoDefaultNoCopyAssign && rhs) { m_Int = std::move(rhs.m_Int); }
-    NoDefaultNoCopyAssign& operator = (NoDefaultNoCopyAssign const&) = delete;
-    ~NoDefaultNoCopyAssign() {}
-};
+    class NoDefaultNoCopyAssign
+    {
+    public:
+        int m_Int;
+        NoDefaultNoCopyAssign(const int value) : m_Int(value) {}
+        NoDefaultNoCopyAssign() = delete;
+        NoDefaultNoCopyAssign(NoDefaultNoCopyAssign && rhs) : m_Int(std::move(rhs.m_Int)) {}
+        NoDefaultNoCopyAssign(NoDefaultNoCopyAssign const & rhs) : m_Int(rhs.m_Int) {}
+        NoDefaultNoCopyAssign& operator = (NoDefaultNoCopyAssign && rhs) { m_Int = std::move(rhs.m_Int); }
+        NoDefaultNoCopyAssign& operator = (NoDefaultNoCopyAssign const&) = delete;
+        ~NoDefaultNoCopyAssign() {}
+    };
+}
 
 bool const test_stack()
 {
@@ -25,11 +28,11 @@ bool const test_stack()
 
     // test copy ctor empty
     {
-        r1::stack<int> s1;
-        r1::stack<int> s2(s1);
-        assert(s1.size() == s2.size());
-        assert(s1.empty() == s2.empty());
-    }
+    r1::stack<int> s1;
+    r1::stack<int> s2(s1);
+    assert(s1.size() == s2.size());
+    assert(s1.empty() == s2.empty());
+}
 
     // test copy ctor full
     {
@@ -72,7 +75,7 @@ bool const test_stack()
         assert(s2.top() == 1); s2.pop();
     }
 
-    // test copy assignment full
+    // test copy assignment empty
     {
         r1::stack<int> s1;
         r1::stack<int> s2 = s1;
@@ -160,21 +163,21 @@ bool const test_stack()
         assert(s1.size() == 2);
         assert(!s1.empty());
 
-        int x = 1;
-        int y = 2;
+        const int x = 1;
+        const int y = 2;
         r1::stack<int> s2;
         s2.push(x);
-        assert(s2.top() == 1);
+        assert(s2.top() == x);
         assert(s2.size() == 1);
         assert(!s2.empty());
 
         s2.push(y);
-        assert(s2.top() == 2);
+        assert(s2.top() == y);
         assert(s2.size() == 2);
         assert(!s2.empty());
 
-        r1::stack<NoDefaultNoCopyAssign> s3;
-        s3.push(NoDefaultNoCopyAssign(7));
+        r1::stack<r1_test_stack::NoDefaultNoCopyAssign> s3;
+        s3.push(r1_test_stack::NoDefaultNoCopyAssign(7));
         assert(s3.top().m_Int == 7);
     }
 

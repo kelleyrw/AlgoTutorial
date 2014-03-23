@@ -27,8 +27,8 @@ namespace r1
         // methods:
         bool empty() const;
         int size() const;
-        void push(T const &value);
-        void push(T &&value);
+        void push(value_type const &value);
+        void push(value_type &&value);
         void pop();
         value_type& top();
         value_type const& top() const;
@@ -87,8 +87,8 @@ namespace r1
         : m_Head(std::move(rhs.m_Head))
         , m_Size(rhs.m_Size)
     {
-        // reset rhs to blank values
-        rhs.m_Head.reset(nullptr);
+        // leave rhs in empty but valid state
+        rhs.m_Head = nullptr;
         rhs.m_Size = 0;
     }
 
@@ -119,15 +119,19 @@ namespace r1
     template <typename T>
     typename stack<T>& stack<T>::operator = (stack &&rhs)
     {
+        // no self assignment allowed
         assert(this != &rhs);
+
+        // move original contents to temp
+        // to get cleaned up
         stack temp(std::move(*this));
 
-        // copy object's data
-        m_Head.reset(rhs.m_Head);
+        // move object's data
+        m_Head - rhs.m_Head;
         m_Size = rhs.m_Size;
 
-        // reset rhs to blank values
-        rhs.m_Head.reset(nullptr);
+        // leave rhs is empty but valid state
+        rhs.m_Head = nullptr;
         rhs.m_Size = 0;
         
         return *this;
@@ -136,8 +140,8 @@ namespace r1
     template <typename T>
     typename stack<T>& stack<T>::operator = (stack const &rhs)
     {
-        stack tmp(rhs);
-        std::swap(*this, tmp);
+        stack temp(rhs);
+        std::swap(*this, temp);
         return *this;
     }
 
@@ -189,7 +193,7 @@ namespace r1
         assert(!empty());
         if (m_Size == 1)
         {
-            m_Head.reset(nullptr);
+            m_Head = nullptr;
         }
         else
         {
