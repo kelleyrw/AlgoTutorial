@@ -40,8 +40,8 @@ bool const test_queue()
     // test copy ctor full
     {
         r1::queue<int> q1;
-        q1.push(1);
-        q1.push(2);
+        q1.push_back(1);
+        q1.push_back(2);
         assert(!q1.empty());
         assert(q1.size() == 2);
         r1::queue<int> q2(q1);
@@ -66,8 +66,8 @@ bool const test_queue()
     // test move ctor full
     {
         r1::queue<int> q1;
-        q1.push(1);
-        q1.push(2);
+        q1.push_back(1);
+        q1.push_back(2);
         assert(!q1.empty());
         assert(q1.size() == 2);
         r1::queue<int> q2(std::move(q1));
@@ -89,8 +89,8 @@ bool const test_queue()
     // test copy assignment full
     {
         r1::queue<int> q1;
-        q1.push(1);
-        q1.push(2);
+        q1.push_back(1);
+        q1.push_back(2);
         assert(!q1.empty());
         assert(q1.size() == 2);
         r1::queue<int> q2 = q1;
@@ -114,8 +114,8 @@ bool const test_queue()
     // test move assignment full
     {
         r1::queue<int> q1;
-        q1.push(1);
-        q1.push(2);
+        q1.push_back(1);
+        q1.push_back(2);
         assert(!q1.empty());
         assert(q1.size() == 2);
         r1::queue<int> q2 = std::move(q1);
@@ -129,10 +129,10 @@ bool const test_queue()
         r1::queue<int> q;
         assert(q.empty());
 
-        q.push(1);
+        q.push_back(1);
         assert(!q.empty());
 
-        q.pop();
+        q.pop_front();
         assert(q.empty());
     }
 
@@ -141,23 +141,23 @@ bool const test_queue()
         r1::queue<int> q;
         assert(q.size() == 0);
 
-        q.push(1);
+        q.push_back(1);
         assert(q.size() == 1);
 
-        q.pop();
+        q.pop_front();
         assert(q.size() == 0);
     }
 
-    // test push
+    // test push_back
     {
         r1::queue<int> q1;
-        q1.push(1);
+        q1.push_back(1);
         assert(q1.front() == 1);
         assert(q1.back() == 1);
         assert(q1.size() == 1);
         assert(!q1.empty());
 
-        q1.push(2);
+        q1.push_back(2);
         assert(q1.front() == 1);
         assert(q1.back() == 2);
         assert(q1.size() == 2);
@@ -166,34 +166,34 @@ bool const test_queue()
         const int x = 1;
         const int y = 2;
         r1::queue<int> q2;
-        q2.push(x);
+        q2.push_back(x);
         assert(q2.front() == x);
         assert(q2.back() == x);
         assert(q2.size() == 1);
         assert(!q2.empty());
 
-        q2.push(y);
+        q2.push_back(y);
         assert(q2.front() == x);
         assert(q2.back() == y);
         assert(q2.size() == 2);
         assert(!q2.empty());
 
         r1::queue<r1_test_queue::NoDefaultNoCopyAssign> q3;
-        q3.push(r1_test_queue::NoDefaultNoCopyAssign(7));
+        q3.push_back(r1_test_queue::NoDefaultNoCopyAssign(7));
         assert(q3.front().m_Int == 7);
     }
 
-    // test pop
+    // test pop_front
     {
         r1::queue<int> q;
-        q.push(1);
-        q.push(2);
-        q.pop();
+        q.push_back(1);
+        q.push_back(2);
+        q.pop_front();
         assert(!q.empty());
         assert(q.size() == 1);
         assert(q.front() == 2);
         assert(q.back() == 2);
-        q.pop();
+        q.pop_front();
         assert(q.empty());
         assert(q.size() == 0);
     }
@@ -201,13 +201,13 @@ bool const test_queue()
     // test front/back
     {
         r1::queue<int> q;
-        q.push(1);
+        q.push_back(1);
         assert(q.front() == 1);
         assert(q.back() == 1);
-        q.push(2);
+        q.push_back(2);
         assert(q.front() == 1);
         assert(q.back() == 2);
-        q.pop();
+        q.pop_front();
         assert(q.front() == 2);
         assert(q.back() == 2);
     }
@@ -215,8 +215,8 @@ bool const test_queue()
     // test front/back const
     {
         r1::queue<int> q1;
-        q1.push(1);
-        q1.push(2);
+        q1.push_back(1);
+        q1.push_back(2);
         const r1::queue<int> q2 = q1;
         assert(q2.front() == 1);
         assert(q2.back() == 2);

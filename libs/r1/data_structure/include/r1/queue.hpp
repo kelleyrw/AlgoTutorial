@@ -25,9 +25,9 @@ namespace r1
         // methods:
         bool empty() const;
         int size() const;
-        void push(value_type &&value);
-        void push(value_type const &value);
-        void pop();
+        void push_back(value_type &&value);
+        void push_back(value_type const &value);
+        void pop_front();
         value_type& front();
         value_type& front() const;
         value_type& back();
@@ -36,11 +36,11 @@ namespace r1
     private:
         // methods:
         class Node;
-        void push(Node * const node);
+        void push_back(Node * const node);
 
         // members:
-        Node * m_Head;
-        Node * m_Tail;
+        Node *m_Front;
+        Node *m_Back;
         int m_Size;
     };
 
@@ -78,36 +78,32 @@ namespace r1
     // construct:
     template <typename T>
     queue<T>::queue()
-        : m_Head(nullptr)
-        , m_Tail(nullptr)
+        : m_Front(nullptr)
+        , m_Back(nullptr)
         , m_Size(0)
     {}
 
     template <typename T>
     queue<T>::queue(queue &&rhs)
-        : m_Head(std::move(rhs.m_Head))
-        , m_Tail(std::move(rhs.m_Tail))
+        : m_Front(std::move(rhs.m_Front))
+        , m_Back(std::move(rhs.m_Back))
         , m_Size(rhs.m_Size)
     {
         // empty but valid state
-        rhs.m_Head = nullptr;
-        rhs.m_Tail = nullptr;
+        rhs.m_Front = nullptr;
+        rhs.m_Back = nullptr;
         rhs.m_Size = 0;
     }
 
     template <typename T>
     queue<T>::queue(queue const &rhs)
-        : m_Head(nullptr)
-        , m_Tail(nullptr)
+        : m_Front(nullptr)
+        , m_Back(nullptr)
         , m_Size(0)
     {
-        if (rhs.empty()) return;
-
-        Node * node = rhs.m_Head;
-        while (node != nullptr)
+        for (Node *node = rhs.m_Front; node != nullptr; node = node->next)
         {
-            push(node->value);
-            node = node->next;
+            push_back(node->value);
         }
     }
 
@@ -123,13 +119,13 @@ namespace r1
         stack temp(std::move(*this));
 
         // move object's data
-        m_Head = std::move(rhs.m_Head);
-        m_Tail = std::move(rhs.m_Tail);
+        m_Front = std::move(rhs.m_Front);
+        m_Back = std::move(rhs.m_Back);
         m_Size = rhs.m_Size;
 
         // leave rhs in empty but valid state
-        rhs.m_Head = nullptr;
-        rhs.m_Tail = nullptr;
+        rhs.m_Front = nullptr;
+        rhs.m_Back = nullptr;
         rhs.m_Size = 0;
 
         return *this;
@@ -147,7 +143,7 @@ namespace r1
     template <typename T>
     queue<T>::~queue()
     {
-        while (!empty()) pop();
+        while (!empty()) pop_front();
     }
 
     // methods:
@@ -164,49 +160,49 @@ namespace r1
     }
 
     template <typename T>
-    void queue<T>::push(Node * const node)
+    void queue<T>::push_back(Node * const node)
     {
         node->next = nullptr;
         if (empty())
         {
-            m_Head = node;
+            m_Front = node;
         }
         else
         {
-            m_Tail->next = node;
+            m_Back->next = node;
         }
-        m_Tail = node;
+        m_Back = node;
         ++m_Size;
     }
 
     template <typename T>
-    void queue<T>::push(value_type &&value)
+    void queue<T>::push_back(value_type &&value)
     {
         Node * const new_node = new Node{ std::move(value), nullptr };
-        push(new_node);
+        push_back(new_node);
     }
 
     template <typename T>
-    void queue<T>::push(value_type const &value)
+    void queue<T>::push_back(value_type const &value)
     {
         Node * const new_node = new Node{ value, nullptr };
-        push(new_node);
+        push_back(new_node);
     }
 
     template <typename T>
-    void queue<T>::pop()
+    void queue<T>::pop_front()
     {
         assert(!empty());
         if (m_Size == 1)
         {
-            delete m_Head;
-            m_Head = nullptr;
-            m_Tail = nullptr;
+            delete m_Front;
+            m_Front = nullptr;
+            m_Back = nullptr;
         }
         else
         {
-            Node * const old_head = m_Head;
-            m_Head = old_head->next;
+            Node * const old_head = m_Front;
+            m_Front = old_head->next;
             delete old_head;
         }
         --m_Size;
@@ -216,28 +212,28 @@ namespace r1
     typename queue<T>::value_type& queue<T>::front()
     {
         assert(!empty());
-        return m_Head->value;
+        return m_Front->value;
     }
 
     template <typename T>
     typename queue<T>::value_type& queue<T>::front() const
     {
         assert(!empty());
-        return m_Head->value;
+        return m_Front->value;
     }
 
     template <typename T>
     typename queue<T>::value_type& queue<T>::back()
     {
         assert(!empty());
-        return m_Tail->value;
+        return m_Back->value;
     }
 
     template <typename T>
     typename queue<T>::value_type& queue<T>::back() const
     {
         assert(!empty());
-        return m_Tail->value;
+        return m_Back->value;
     }
 
 } // namespace r1
