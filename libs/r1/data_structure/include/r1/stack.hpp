@@ -130,7 +130,7 @@ namespace r1
         m_Head - rhs.m_Head;
         m_Size = rhs.m_Size;
 
-        // leave rhs is empty but valid state
+        // leave rhs in empty but valid state
         rhs.m_Head = nullptr;
         rhs.m_Size = 0;
         
