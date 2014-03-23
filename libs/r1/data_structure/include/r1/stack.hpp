@@ -22,7 +22,7 @@ namespace r1
         stack& operator = (stack const &rhs);
 
         // destroy:
-        ~stack();
+        ~stack() = default;
 
         // methods:
         bool empty() const;
@@ -35,7 +35,7 @@ namespace r1
 
     private:
         // methods:
-        struct Node;
+        class Node;
         void push(std::unique_ptr<Node> &node);
 
         // members:
@@ -54,13 +54,26 @@ namespace r1
 {
     // members:
     template <typename T>
-    struct stack<T>::Node
+    class stack<T>::Node
     {
-        Node(T const &v, Node * const n) : value(v), next(n) {}
-        Node(T &&v, Node * const n) : value(std::move(v)), next(n) {}
+    public:
+        Node(T const &v, Node * const n);
+        Node(T &&v, Node * const n);
         T value;
         std::unique_ptr<Node> next;
     };
+
+    template <typename T>
+    stack<T>::Node::Node(T const &v, Node * const n)
+        : value(v)
+        , next(n)
+    {}
+
+    template <typename T>
+    stack<T>::Node::Node(T &&v, Node * const n)
+        : value(std::move(v))
+        , next(n)
+    {}
 
     // construct:
     template <typename T>
@@ -126,13 +139,6 @@ namespace r1
         stack tmp(rhs);
         std::swap(*this, tmp);
         return *this;
-    }
-
-    // destroy:
-    template <typename T>
-    stack<T>::~stack()
-    {
-        while (!empty()) pop();
     }
 
     // methods:
