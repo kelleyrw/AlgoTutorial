@@ -76,6 +76,26 @@ bool const test_queue()
         assert(q2.size() == 2);
     }
 
+    // test initialzie list empty
+    {
+        r1::queue<int> q = {};
+        assert(q.empty());
+        assert(q.size() == 0);
+    }
+
+    // test initialzie list full
+    {
+        r1::queue<int> q = {1, 2, 3};
+        assert(!q.empty());
+        assert(q.size() == 3);
+        assert(q.front() == 1);
+        q.pop_front();
+        assert(q.front() == 2);
+        q.pop_front();
+        assert(q.front() == 3);
+        q.pop_front();
+    }
+
     // test copy assignment empty
     {
         r1::queue<int> q1;

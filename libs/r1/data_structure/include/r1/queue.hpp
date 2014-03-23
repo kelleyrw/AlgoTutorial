@@ -1,6 +1,8 @@
 #ifndef R1_QUEUE_HPP
 #define R1_QUEUE_HPP
 
+#include <initializer_list>
+
 namespace r1
 {
     template <typename T>
@@ -14,6 +16,7 @@ namespace r1
         queue();
         queue(queue &&rhs);
         queue(queue const &rhs);
+        queue(std::initializer_list<value_type> list);
 
         // assign:
         queue& operator = (queue &&rhs);
@@ -57,8 +60,11 @@ namespace r1
     class queue<T>::Node
     {
     public:
+        // construct:
         Node(value_type const &v, Node * const n);
         Node(value_type &&v, Node * const n);
+
+        // members:
         value_type value;
         Node *next;
     };
@@ -105,6 +111,15 @@ namespace r1
         {
             push_back(node->value);
         }
+    }
+
+    template <typename T>
+    queue<T>::queue(std::initializer_list<value_type> list)
+        : m_Front(nullptr)
+        , m_Back(nullptr)
+        , m_Size(0)
+    {
+        for (auto &value : list) push_back(value);
     }
 
     // assign:
