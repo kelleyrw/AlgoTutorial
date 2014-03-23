@@ -119,7 +119,7 @@ namespace r1
         , m_Back(nullptr)
         , m_Size(0)
     {
-        for (auto &value : list) push_back(value);
+        for (auto &&value : list) push_back(value);
     }
 
     // assign:
