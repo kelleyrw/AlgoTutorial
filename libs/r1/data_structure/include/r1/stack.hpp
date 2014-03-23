@@ -1,6 +1,8 @@
 #ifndef R1_STACK_HPP
 #define R1_STACK_HPP
 
+#include <memory>
+
 namespace r1
 {
     template <typename T>
@@ -34,10 +36,10 @@ namespace r1
     private:
         // methods:
         struct Node;
-        void push(Node * const node);
+        void push(std::unique_ptr<Node> &node);
 
         // members:
-        Node *m_Head;
+        std::unique_ptr<Node> m_Head;
         int m_Size;
     };
 
@@ -54,8 +56,10 @@ namespace r1
     template <typename T>
     struct stack<T>::Node
     {
+        Node(T const &v, Node * const n) : value(v), next(n) {}
+        Node(T &&v, Node * const n) : value(std::move(v)), next(n) {}
         T value;
-        Node *next;
+        std::unique_ptr<Node> next;
     };
 
     // construct:
@@ -67,11 +71,11 @@ namespace r1
 
     template <typename T>
     stack<T>::stack(stack &&rhs)
-        : m_Head(rhs.m_Head)
+        : m_Head(std::move(rhs.m_Head))
         , m_Size(rhs.m_Size)
     {
         // reset rhs to blank values
-        rhs.m_Head = nullptr;
+        rhs.m_Head.reset(nullptr);
         rhs.m_Size = 0;
     }
 
@@ -83,19 +87,18 @@ namespace r1
         if (rhs.empty()) return;
         
         // initial node
-        Node * tail = new Node{ rhs.m_Head->value, nullptr };
-        m_Head = tail;
+        m_Head.reset(new Node(rhs.m_Head->value, nullptr));
+        Node * tail = m_Head.get();
         ++m_Size;
         
         // subsequent nodes
-        Node * node = rhs.m_Head->next;
+        Node * node = rhs.m_Head->next.get();
         while (node != nullptr)
         {
-            Node * new_node = new Node{ node->value, nullptr };
-            tail->next = new_node;
-            tail = new_node;
+            tail->next.reset(new Node(node->value, nullptr));
+            tail = tail->next.get();
             ++m_Size;
-            node = node->next;
+            node = node->next.get();
         }
     }
 
@@ -107,11 +110,11 @@ namespace r1
         stack temp(std::move(*this));
 
         // copy object's data
-        m_Head = rhs.m_Head;
+        m_Head.reset(rhs.m_Head);
         m_Size = rhs.m_Size;
 
         // reset rhs to blank values
-        rhs.m_Head = nullptr;
+        rhs.m_Head.reset(nullptr);
         rhs.m_Size = 0;
         
         return *this;
@@ -146,17 +149,16 @@ namespace r1
     }
 
     template <typename T>
-    void stack<T>::push(Node * const node)
+    void stack<T>::push(std::unique_ptr<Node> &node)
     {
         if (empty())
         {
-            m_Head = node;
-            node->next = nullptr;
+            m_Head = std::move(node);
         }
         else
         {
-            node->next = m_Head;
-            m_Head = node;
+            node->next = std::move(m_Head);
+            m_Head = std::move(node);
         }
         ++m_Size;
     }
@@ -164,14 +166,14 @@ namespace r1
     template <typename T>
     void stack<T>::push(T const &value)
     {
-        Node * const new_node = new Node{ value, nullptr };
+        std::unique_ptr<Node> new_node = std::make_unique<Node>(value, nullptr);
         push(new_node);
     }
 
     template <typename T>
     void stack<T>::push(T &&value)
     {
-        Node * const new_node = new Node{ std::move(value), nullptr };
+        std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value), nullptr);
         push(new_node);
     }
 
@@ -181,14 +183,11 @@ namespace r1
         assert(!empty());
         if (m_Size == 1)
         {
-            delete m_Head;
-            m_Head = nullptr;
+            m_Head.reset(nullptr);
         }
         else
         {
-            Node * const old_head = m_Head;
-            m_Head = m_Head->next;
-            delete old_head;
+            m_Head = std::move(m_Head->next);
         }
         --m_Size;
     }
