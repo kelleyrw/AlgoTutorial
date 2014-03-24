@@ -34,11 +34,18 @@ namespace r1
 
         // methods:
         iterator begin();
+        const_iterator begin() const;
+
         iterator end();
-        iterator rbegin();
-        iterator rend();
+        const_iterator end() const;
+        reverse_iterator rbegin();
+        const_reverse_iterator rbegin() const;
+        reverse_iterator rend();
+        const_reverse_iterator rend() const;
         value_type& front();
+        value_type const& front() const;
         value_type& back();
+        value_type const& back() const;
         void push_front(value_type const &value);
         void push_front(value_type &&value);
         void push_back(value_type const &value);
@@ -52,12 +59,10 @@ namespace r1
         iterator erase(const_iterator position);
         iterator erase(const_iterator first, const_iterator last);
         void clear();
+        const bool empty() const;
+        const size_type size() const;
 
         // shall i do these?
-        void remove(value_type const &value);
-        template <typename Predicate>
-        void remove_if(Predicate pred);
-        void unique();
         void merge(list &l);
         void merge(list &&l);
         template <typename Compare>
@@ -70,14 +75,9 @@ namespace r1
         void reverse();
 
         // const methods:
-        const_iterator begin()  const;
-        const_iterator end()    const;
-        const_iterator rbegin() const;
-        const_iterator rend()   const;
-        const bool empty() const;
-        const size_type size() const;
-        value_type const& front() const;
-        value_type const& back() const;
+
+
+
         
     private:
         // members:
