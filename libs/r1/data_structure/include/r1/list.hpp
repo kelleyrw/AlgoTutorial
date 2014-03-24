@@ -12,6 +12,8 @@ namespace r1
         // iterators
         class iterator;
         class const_iterator;
+        class reverse_iterator;
+        class const_reverse_iterator;
         
         // typdefs:
         typedef T value_type;
@@ -76,8 +78,7 @@ namespace r1
         const size_type size() const;
         value_type const& front() const;
         value_type const& back() const;
-
-
+        
     private:
         // members:
         class Node;
