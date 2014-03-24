@@ -1,6 +1,8 @@
 #ifndef R1_LIST_HPP
 #define R1_LIST_HPP
 
+#include <initializer_list>
+
 namespace r1
 {
     template <typename T>
@@ -14,7 +16,7 @@ namespace r1
         class const_reverse_iterator;
         typedef T value_type;
         typedef int size_type;
-        typedef ptrdiff_t difference_type;
+        typedef int difference_type;
 
         // construct:
         explicit list();
@@ -44,8 +46,8 @@ namespace r1
         const_reverse_iterator rend() const;
 
         // capacity:
-        const bool empty() const;
-        const size_type size() const;
+        bool empty() const;
+        size_type size() const;
 
         // modifiers:
         void clear();
@@ -77,8 +79,9 @@ namespace r1
 
     private:
         // members:
-        class Node;
-        Node sentinel;
+        struct node_base;
+        struct node;
+        node_base m_Sentinel;
     };
 
     // non-member function overloads:
@@ -90,5 +93,74 @@ namespace r1
 #include <memory>
 
 #pragma endregion
+
+namespace r1
+{
+    // iterators
+    template <typename T>
+    class list<T>::iterator
+    {
+    public:
+        // construct:
+        iterator();
+        iterator(iterator const &rhs);
+        iterator(iterator &&rhs);
+
+        // destroy:
+        ~iterator();
+
+        // assign:
+        iterator& operator = (iterator const &rhs);
+        iterator& operator = (iterator &&rhs);
+
+        // members:
+        bool operator == (iterator const &rhs) const;
+        bool operator == (iterator &&rhs) const;
+        bool operator != (iterator const &rhs) const;
+        bool operator != (iterator &&rhs) const;
+        value_type& operator * ();
+        value_type const & operator * () const;
+        value_type * const operator -> ();
+        value_type const * const operator -> () const;
+        iterator& operator ++ (); // prefix
+        iterator& operator ++ (int); // postfix
+        iterator& operator -- (); // prefix
+        iterator& operator -- (int); // postfix
+
+    private:
+        // members:
+        list* m_List;
+        node_base* m_Node;
+    };
+
+    // members:
+    template <typename T>
+    struct list<T>::node_base
+    {
+        std::unique_ptr<node_base> next;
+        node_base *pref;
+    };
+
+    template <typename T>
+    struct list<T>::node : public node_base
+    {
+        value_type value;
+    };
+
+    // construct:
+    template <typename T>
+    /*explicit*/ list<T>::list()
+        : m_Sentinal(nullptr, nullptr)
+    {
+        m_Sentinel.next = m_Sentinal.prev;
+        m_Sentinel.prev = m_Sentinal.next;
+    }
+
+    // assign:
+
+    // members:
+
+
+}
 
 #endif // R1_LIST_HPP

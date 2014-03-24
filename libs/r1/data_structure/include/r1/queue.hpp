@@ -243,6 +243,7 @@ namespace r1
     }
 
 } // namespace r1
+
 #pragma endregion
 
 #endif  // R1_QUEUE_HPP
