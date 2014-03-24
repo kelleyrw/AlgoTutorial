@@ -2,6 +2,7 @@
 #define R1_LIST_HPP
 
 #include <initializer_list>
+#include <iterator>
 
 namespace r1
 {
@@ -84,21 +85,9 @@ namespace r1
         node_base m_Sentinel;
     };
 
-    // non-member function overloads:
-
-}// namespace r1
-
-#pragma region implementation
-
-#include <memory>
-
-#pragma endregion
-
-namespace r1
-{
     // iterators
     template <typename T>
-    class list<T>::iterator
+    class list<T>::iterator : public std::iterator<std::bidirectional_iterator_tag, T>
     {
     public:
         // construct:
@@ -133,6 +122,18 @@ namespace r1
         node_base* m_Node;
     };
 
+    // non-member function overloads:
+
+}// namespace r1
+
+#pragma region implementation
+
+#include <memory>
+
+#pragma endregion
+
+namespace r1
+{
     // members:
     template <typename T>
     struct list<T>::node_base
