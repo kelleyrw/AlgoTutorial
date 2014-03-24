@@ -2,6 +2,7 @@
 #define R1_QUEUE_HPP
 
 #include <initializer_list>
+#include <memory>
 
 namespace r1
 {
@@ -23,7 +24,7 @@ namespace r1
         queue& operator = (queue const &rhs);
 
         // destroy:
-        ~queue();
+        ~queue() = default;
 
         // methods:
         bool empty() const;
@@ -39,10 +40,10 @@ namespace r1
     private:
         // methods:
         class Node;
-        void push_back(Node * const node);
+        void push_back(std::unique_ptr<Node> &node);
 
         // members:
-        Node *m_Front;
+        std::unique_ptr<Node> m_Front;
         Node *m_Back;
         int m_Size;
     };
@@ -66,7 +67,7 @@ namespace r1
 
         // members:
         value_type value;
-        Node *next;
+        std::unique_ptr<Node> next;
     };
 
     template <typename T>
@@ -107,7 +108,7 @@ namespace r1
         , m_Back(nullptr)
         , m_Size(0)
     {
-        for (Node *node = rhs.m_Front; node != nullptr; node = node->next)
+        for (Node const * node = rhs.m_Front.get(); node != nullptr; node = node->next.get())
         {
             push_back(node->value);
         }
@@ -154,13 +155,6 @@ namespace r1
         return *this;
     }
 
-    // destroy:
-    template <typename T>
-    queue<T>::~queue()
-    {
-        while (!empty()) pop_front();
-    }
-
     // methods:
     template <typename T>
     bool queue<T>::empty() const
@@ -175,32 +169,32 @@ namespace r1
     }
 
     template <typename T>
-    void queue<T>::push_back(Node * const node)
+    void queue<T>::push_back(std::unique_ptr<Node> &node)
     {
-        node->next = nullptr;
         if (empty())
         {
-            m_Front = node;
+            m_Back = node.get();
+            m_Front = std::move(node);
         }
         else
         {
-            m_Back->next = node;
+            m_Back->next = std::move(node);
+            m_Back = m_Back->next.get();
         }
-        m_Back = node;
         ++m_Size;
     }
 
     template <typename T>
     void queue<T>::push_back(value_type &&value)
     {
-        Node * const new_node = new Node{ std::move(value), nullptr };
+        std::unique_ptr<Node> new_node = std::make_unique<Node>(std::move(value), nullptr);
         push_back(new_node);
     }
 
     template <typename T>
     void queue<T>::push_back(value_type const &value)
     {
-        Node * const new_node = new Node{ value, nullptr };
+        std::unique_ptr<Node> new_node = std::make_unique<Node>(value, nullptr);
         push_back(new_node);
     }
 
@@ -210,15 +204,12 @@ namespace r1
         assert(!empty());
         if (m_Size == 1)
         {
-            delete m_Front;
             m_Front = nullptr;
             m_Back = nullptr;
         }
         else
         {
-            Node * const old_head = m_Front;
-            m_Front = old_head->next;
-            delete old_head;
+            m_Front = std::move(m_Front->next);
         }
         --m_Size;
     }
