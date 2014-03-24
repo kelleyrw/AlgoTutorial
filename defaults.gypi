@@ -1,6 +1,7 @@
 {
     'target_defaults':
     {
+        'msbuild_toolset': 'CTP_Nov2013', # msvs-2013
         'msvs_settings':
         {
             'VCCLCompilerTool':

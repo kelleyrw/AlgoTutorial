@@ -89,7 +89,7 @@ namespace r1
         node_base m_Sentinel;
     };
 
-    // iterators
+    // iterator:
     template <typename T>
     class list<T>::iterator 
         : public std::iterator
@@ -103,29 +103,25 @@ namespace r1
     {
     public:
         // construct:
-        iterator();
-        iterator(iterator &&rhs);
-        iterator(iterator const &rhs);
+        iterator() = default;
+        iterator(iterator &&rhs) = default;
+        iterator(iterator const &rhs) = default;
 
         // destroy:
-        ~iterator();
+        ~iterator() = default;
 
         // assign:
-        iterator& operator = (iterator &&rhs);
-        iterator& operator = (iterator const &rhs);
+        iterator& operator = (iterator &&rhs) = default;
+        iterator& operator = (iterator const &rhs) = default;
 
         // members:
-        bool operator == (iterator &&rhs) const;
-        bool operator == (iterator const &rhs) const;
-        bool operator != (iterator &&rhs) const;
-        bool operator != (iterator const &rhs) const;
         reference operator * ();
         const_reference operator * () const;
         pointer_type operator -> ();
         const_pointer_type operator -> () const;
-        iterator& operator ++ (); // prefix
+        iterator& operator ++ ();    // prefix
         iterator& operator ++ (int); // postfix
-        iterator& operator -- (); // prefix
+        iterator& operator -- ();    // prefix
         iterator& operator -- (int); // postfix
 
     private:
@@ -133,6 +129,14 @@ namespace r1
         node_base *m_Node;
     };
 
+    // non-member overloads:
+    template <typename T>
+    bool operator == (typename list<T>::iterator const &lhs, typename list<T>::iterator const &rhs);
+
+    template <typename T>
+    bool operator != (typename list<T>::iterator const &lhs, typename list<T>::iterator const &rhs);
+
+    // const iterator:
     template <typename T>
     class list<T>::const_iterator
         : public std::iterator
@@ -146,27 +150,23 @@ namespace r1
     {
     public:
         // construct:
-        const_iterator();
-        const_iterator(const_iterator &&rhs);
-        const_iterator(const_iterator const &rhs);
+        const_iterator() = default;
+        const_iterator(const_iterator &&rhs) = default;
+        const_iterator(const_iterator const &rhs) = default;
 
         // destroy:
-        ~const_iterator();
+        ~const_iterator() = default;
 
         // assign:
-        const_iterator& operator = (const_iterator &&rhs);
-        const_iterator& operator = (const_iterator const &rhs);
+        const_iterator& operator = (const_iterator &&rhs) = default;
+        const_iterator& operator = (const_iterator const &rhs) = default;
 
         // members:
-        bool operator == (const_iterator &&rhs) const;
-        bool operator == (const_iterator const &rhs) const;
-        bool operator != (const_iterator &&rhs) const;
-        bool operator != (const_iterator const &rhs) const;
         const_reference operator * () const;
         const_pointer_type operator -> () const;
-        const_iterator& operator ++ (); // prefix
+        const_iterator& operator ++ ();    // prefix
         const_iterator& operator ++ (int); // postfix
-        const_iterator& operator -- (); // prefix
+        const_iterator& operator -- ();    // prefix
         const_iterator& operator -- (int); // postfix
 
     private:
@@ -174,7 +174,12 @@ namespace r1
         node_base *m_Node;
     };
 
-    // non-member function overloads:
+    // non-member overloads:
+    template <typename T>
+    bool operator == (typename list<T>::const_iterator const &lhs, typename list<T>::const_iterator const &rhs);
+
+    template <typename T>
+    bool operator != (typename list<T>::const_iterator const &lhs, typename list<T>::const_iterator const &rhs);
 
 }// namespace r1
 
@@ -184,6 +189,143 @@ namespace r1
 
 namespace r1
 {
+    // iterator members:
+    template <typename T>
+    typename list<T>::reference list<T>::iterator::operator * ()
+    {
+        assert(*this != end());
+        return dynamic_cast<node>(m_Node)->value;
+    }
+
+    //template <typename T>
+    //typename list<T>::const_reference list<T>::iterator::operator * () const
+    //{
+    //    return m_Node->value;
+    //}
+
+    //template <typename T>
+    //typename list<T>::pointer_type list<T>::iterator::operator -> ()
+    //{
+    //    return &(m_Node->value);
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_pointer_type list<T>::iterator::operator -> () const
+    //{
+    //    return &(m_Node->value);
+    //}
+
+    //template <typename T>
+    //typename list<T>::iterator& list<T>::iterator::operator ++ () // prefix
+    //{
+    //    m_Node = m_Node->next;
+    //    return *this;
+    //}
+
+    //template <typename T>
+    //typename list<T>::iterator& list<T>::iterator::operator ++ (int) // postfix
+    //{
+    //    iterator temp(*this);
+    //    m_Node = m_Node->next;
+    //    return temp;
+    //}
+
+    //template <typename T>
+    //typename list<T>::iterator& list<T>::iterator::operator -- () // prefix
+    //{
+    //    m_Node = m_Node->prev;
+    //    return *this;
+    //}
+
+    //template <typename T>
+    //typename list<T>::iterator& list<T>::iterator::operator -- (int) // postfix
+    //{
+    //    iterator temp(*this);
+    //    m_Node = m_Node->prev;
+    //    return temp;
+    //}
+
+    //// iterator non-member overloads:
+    //template <typename T>
+    //bool operator == (typename list<T>::iterator const &lhs, typename list<T>::iterator const &rhs)
+    //{
+    //    return (lhs.m_Node == rhs.m_Node);
+    //}
+
+    //template <typename T>
+    //bool operator != (typename list<T>::iterator const &lhs, typename list<T>::iterator const &rhs)
+    //{
+    //    return !(lhs == rhs);
+    //}
+
+    //// const_iterator members:
+    //template <typename T>
+    //typename list<T>::reference list<T>::const_iterator::operator * ()
+    //{
+    //    return m_Node->value;
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_reference list<T>::const_iterator::operator * () const
+    //{
+    //    return m_Node->value;
+    //}
+
+    //template <typename T>
+    //typename list<T>::pointer_type list<T>::const_iterator::operator -> ()
+    //{
+    //    return &(m_Node->value);
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_pointer_type list<T>::const_iterator::operator -> () const
+    //{
+    //    return &(m_Node->value);
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_iterator& list<T>::const_iterator::operator ++ () // prefix
+    //{
+    //    m_Node = m_Node->next;
+    //    return *this;
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_iterator& list<T>::const_iterator::operator ++ (int) // postfix
+    //{
+    //    const_iterator temp(*this);
+    //    m_Node = m_Node->next;
+    //    return temp;
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_iterator& list<T>::const_iterator::operator -- () // prefix
+    //{
+    //    m_Node = m_Node->prev;
+    //    return *this;
+    //}
+
+    //template <typename T>
+    //typename list<T>::const_iterator& list<T>::const_iterator::operator -- (int) // postfix
+    //{
+    //    const_iterator temp(*this);
+    //    m_Node = m_Node->prev;
+    //    return temp;
+    //}
+
+    //// const_iterator non-member overloads:
+    //template <typename T>
+    //bool operator == (typename list<T>::const_iterator const &lhs, typename list<T>::const_iterator const &rhs)
+    //{
+    //    return (lhs.m_Node == rhs.m_Node);
+    //}
+
+    //template <typename T>
+    //bool operator != (typename list<T>::const_iterator const &lhs, typename list<T>::const_iterator const &rhs)
+    //{
+    //    return !(lhs == rhs);
+    //}
+
     // members:
     template <typename T>
     struct list<T>::node_base
