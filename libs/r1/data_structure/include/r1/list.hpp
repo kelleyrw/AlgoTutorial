@@ -150,10 +150,10 @@ namespace r1
     // construct:
     template <typename T>
     /*explicit*/ list<T>::list()
-        : m_Sentinal(nullptr, nullptr)
+        : m_Sentinel(nullptr, nullptr)
     {
-        m_Sentinel.next = m_Sentinal.prev;
-        m_Sentinel.prev = m_Sentinal.next;
+        m_Sentinel.next = m_Sentinel.prev;
+        m_Sentinel.prev = m_Sentinel.next;
     }
 
     // assign:
