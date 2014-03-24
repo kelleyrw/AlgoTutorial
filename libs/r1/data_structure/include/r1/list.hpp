@@ -69,20 +69,23 @@ namespace r1
         void push_back(value_type const &value);
 
         // operations:
-        void splice(list &l);
-        void splice(list &&l);
-        template <typename Compare>
-        void splice(list &l, Compare comp);
-        template <typename Compare>
-        void splice(list &&l, Compare comp);
-        void merge(list &l);
-        void merge(list &&l);
-        template <typename Compare>
-        void merge(list &l, Compare comp);
-        template <typename Compare>
-        void merge(list &&l, Compare comp);
+        //void splice(list &l);
+        //void splice(list &&l);
+        //template <typename Compare>
+        //void splice(list &l, Compare comp);
+        //template <typename Compare>
+        //void splice(list &&l, Compare comp);
+        //void merge(list &l);
+        //void merge(list &&l);
+        //template <typename Compare>
+        //void merge(list &l, Compare comp);
+        //template <typename Compare>
+        //void merge(list &&l, Compare comp);
 
     private:
+        // methods:
+        void InitSentinel();
+
         // members:
         struct node_base;
         struct node;
@@ -324,7 +327,7 @@ namespace r1
     struct list<T>::node_base
     {
         std::unique_ptr<node_base> next;
-        node_base *pref;
+        node_base *prev;
     };
 
     template <typename T>
@@ -338,14 +341,169 @@ namespace r1
     /*explicit*/ list<T>::list()
         : m_Sentinel(nullptr, nullptr)
     {
+        InitSentinel();
+    }
+
+    template <typename T>
+    list<T>::list(list &&rhs)
+        : m_Sentinel(std::move(rhs.m_Sentinel))
+    {}
+
+    template <typename T>
+    list<T>::list(list const &rhs)
+        : m_Sentinel(nullptr, nullptr)
+    {
+        // initialize to blank list
+        InitSentinel();
+
+        // deep copy of nodes from rhs
+        for (auto &&n = rhs.begin(); n != rhs.end(); ++n)
+        {
+            push_back(*n);
+        }
+    }
+
+    template <typename T>
+    list<T>::list(std::initializer_list<T> il)
+        : m_Sentinel(nullptr, nullptr)
+    {
+        // initialize to blank list
+        InitSentinel();
+
+        // move from the init list
+        for (auto &&value : il) push_back(std::move(value));
+    }
+
+    // assign:
+    template <typename T>
+    typename list<T>& list<T>::operator = (list &&rhs)
+    {
+        // no self assignment
+        assert(this != &rhs);
+
+        // move original contents to temp
+        // to get cleaned up
+        list temp(std::move(*this));
+
+        m_Sentinel = std::move(rhs.m_Sentinel);
+        rhs.InitSentinel();
+    }
+
+    template <typename T>
+    typename list<T>& list<T>::operator = (list const &rhs)
+    {
+        list temp(rhs);
+        *this = std::move(temp);
+        return *this;
+    }
+
+    template <typename T>
+    typename list<T>& list<T>::operator = (std::initializer_list<value_type> il)
+    {
+        // no self assignment
+        assert(this != &rhs);
+
+        // move original contents to temp
+        // to get cleaned up
+        stack temp(std::move(*this));
+
+        // move from the init list
+        for (auto &&value : il) push_back(std::move(value));
+    }
+
+    // members:
+
+    template <typename T>
+    void list<T>::InitSentinel()
+    {
         m_Sentinel.next = m_Sentinel.prev;
         m_Sentinel.prev = m_Sentinel.next;
     }
 
-    // assign:
+    // element access:
+    template <typename T>
+    typename list<T>::reference list<T>::front()
+    {
+        assert(!empty());
+        return dynamic_cast<node*>(m_Sentinel->next.get())->value;
+    }
 
-    // members:
+    template <typename T>
+    typename list<T>::const_reference list<T>::front() const
+    {
+        assert(!empty());
+        return dynamic_cast<node*>(m_Sentinel->next.get())->value;
+    }
 
+    template <typename T>
+    typename list<T>::reference list<T>::back()
+    {
+        assert(!empty());
+        return dynamic_cast<node*>(m_Sentinel->prev)->value;
+    }
+
+    template <typename T>
+    typename list<T>::const_reference list<T>::back() const
+    {
+        assert(!empty());
+        return dynamic_cast<node*>(m_Sentinel->prev)->value;
+    }
+
+    template <typename T>
+    typename list<T>::iterator list<T>::begin()
+    {
+        iterator iter{ m_Sentinal->next.get() };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::const_iterator list<T>::begin() const
+    {
+        const_iterator iter{ m_Sentinal->next.get() };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::iterator list<T>::end()
+    {
+        iterator iter{ &m_Sentinal };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::const_iterator list<T>::end() const
+    {
+        const_iterator iter{ &m_Sentinal };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::reverse_iterator list<T>::rbegin()
+    {
+        reverse_iterator iter{ m_Sentinal->prev };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::const_reverse_iterator list<T>::rbegin() const
+    {
+        const_reverse_iterator iter{ m_Sentinal->prev };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::reverse_iterator list<T>::rend()
+    {
+        reverse_iterator iter{ &m_Sentinal };
+        return iter;
+    }
+
+    template <typename T>
+    typename list<T>::const_reverse_iterator list<T>::rend() const
+    {
+        const_reverse_iterator iter{ &m_Sentinal };
+        return iter;
+    }
 }
 
 #pragma endregion
