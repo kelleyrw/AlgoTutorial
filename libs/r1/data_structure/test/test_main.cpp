@@ -2,6 +2,7 @@
 
 extern bool const test_stack();
 extern bool const test_queue();
+extern bool const test_list();
 
 bool const test_main()
 {
@@ -9,6 +10,7 @@ bool const test_main()
 
     result &= test_stack();
     result &= test_queue();
+    result &= test_list();
 
     return result;
 }
